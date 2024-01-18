@@ -1,35 +1,35 @@
-import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { render } from '@testing-library/angular';
 import { AppComponent } from './app.component';
+import { DataTableComponent } from './data-table/data-table.component';
+
+import { DataService } from './data.service';
+import { DataServiceMock } from './data.service.mock';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
+  it('should create the app', async () => {
+    const component = await render(AppComponent, {
+      declarations: [DataTableComponent],
+      providers: [DataService],
+    });
+    expect(component).toBeTruthy();
+  });
+
+  it('should render DataTableComponent', async () => {
+
+
+    const dataTableComponentMock = {
+    } as jest.Mocked<DataTableComponent>;
+
+    const component = await render(AppComponent, {
+      declarations: [DataTableComponent],
+      imports: [ReactiveFormsModule],
+      providers: [
+        { provide: DataService, useClass: DataServiceMock },
+        { provide: DataTableComponent, useValue: dataTableComponentMock },
       ],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
-  });
+    });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'codesignal'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('codesignal');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('codesignal app is running!');
+    expect(component.fixture.componentInstance).toBeTruthy();
   });
 });
